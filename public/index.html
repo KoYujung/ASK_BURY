@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>감정 분석</title>
+  <title>일기 작성</title>
   <link href="./main.css" rel="stylesheet">
 </head>
 <body>
@@ -18,30 +18,36 @@
     const inputDiary = document.getElementById("inputDiary");
     const resultElement = document.getElementById("result");
 
-    analyzeButton.addEventListener("click", async () => {
-      const text = inputDiary.value.trim();
+    // analyzeButton.addEventListener("click", async () => {
+    //   const text = inputDiary.value.trim();
 
-      if (text === "") {
-        resultElement.textContent = "내용을 작성해주셔야 분석을 해드립니다 !";
-        return;
-      }
+    //   if (text === "") {
+    //     resultElement.textContent = "내용을 작성해주셔야 분석을 해드립니다 !";
+    //     return;
+    //   }
 
-      const url = `http://localhost:3000/analyze?text=${encodeURIComponent(text)}`;
+    //   const url = `http://localhost:3000/analyze?text=${encodeURIComponent(text)}`;
 
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+    //   try {
+    //     const response = await fetch(url, {
+    //       method: "GET",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //     });
 
-        const result = await response.json();
-        resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
-      } catch (error) {
-        resultElement.textContent = "오류가 발생했습니다: " + error;
-      }
-    });
+    //     const result = await response.json();
+    //     resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
+    //   } catch (error) {
+    //     resultElement.textContent = "오류가 발생했습니다: " + error;
+    //   }
+    // });
+
+    analyzeButton.addEventListener("click",openPop);
+
+    function openPop(){
+      var popup = window.open('analyze.html', 'windowPop', 'width=400, height=600, left=400, top=400, resizable = yes');
+    }
 
   </script>
 </body>
