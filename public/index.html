@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>감정 분석</title>
+</head>
+<body>
+  <h1>텍스트 감정 분석</h1>
+  <textarea id="inputText" rows="4" cols="50" placeholder="텍스트를 입력하세요..."></textarea>
+  <br>
+  <button id="analyzeButton">분석하기</button>
+  <br>
+  <p id="result"></p>
+
+  <script>
+    const analyzeButton = document.getElementById("analyzeButton");
+const inputText = document.getElementById("inputText");
+const resultElement = document.getElementById("result");
+
+analyzeButton.addEventListener("click", async () => {
+  const text = inputText.value.trim();
+
+  if (text === "") {
+    resultElement.textContent = "입력된 텍스트가 없습니다.";
+    return;
+  }
+
+  const url = `http://localhost:3000/analyze?text=${encodeURIComponent(text)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await response.json();
+    resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
+  } catch (error) {
+    resultElement.textContent = "오류가 발생했습니다: " + error;
+  }
+});
+
+  </script>
+</body>
+</html>
