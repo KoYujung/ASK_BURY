@@ -13,8 +13,25 @@ body {
     font-family: HakgyoansimWoojuR;
 }
 
-#diaryTitle, #diaryMain {
+#diaryTitle {
+    font-size: 70px;
     text-align: center;
+    margin: 3%;
+}
+
+#diaryMain {
+    text-align: center;
+}
+
+#inputDiary {
+    background-color: #D7C0AE;
+    font-size: 30px;
+    border: 0;
+    border-radius: 30px;
+    width: 65%;
+    height: 350px;
+    padding: 2%;
+    margin: 3%;
 }
 
 #analyzeButton {
@@ -23,18 +40,7 @@ body {
     font-size: 50px;
     border: 0;
     border-radius: 30px;
-    width: 250px;
+    width: 15%;
     height: 100px;
-    padding: 8px;
-    margin: 10px;
-}
-
-#inputDiary {
-    background-color: #D7C0AE;
-    font-size: 30px;
-    border: 0;
-    border-radius: 10px;
-    width: 50%;
-    height: 40%;
     padding: 8px;
 }
