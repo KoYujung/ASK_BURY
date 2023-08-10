@@ -13,10 +13,6 @@ body {
     font-family: HakgyoansimWoojuR;
 }
 
-#diaryHeader {
-    
-}
-
 #diaryTitle {
     font-size: 70px;
     text-align: center;
@@ -55,9 +51,18 @@ body {
 }
 
 #firstImg {
-    height: 720px;
+    position: relative;
+    height: 700px;
     background-image: url('./img/first_gif.gif');
     background-size: cover;
+}
+
+#firstImgTitle {
+    bottom: 0;
+    position: absolute;
+    font-size: 65px;
+    color: #D7C0AE;
+    margin: 15px;
 }
 
 a {

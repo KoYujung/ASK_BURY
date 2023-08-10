@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>감정 분석 결과</title>
+    <title>감정 분석 결과 화면</title>
 </head>
 <body>
     <div id="resultContainer"></div>
@@ -15,7 +15,7 @@
         if (resultString) {
             const result = JSON.parse(decodeURIComponent(resultString));
             const resultText = JSON.stringify(result, null, 2);
-            resultContainer.textContent = "감성 분석 결과:\n" + resultText;
+            resultContainer.textContent = "AI가 분석한 당신의 감정입니다" + "<br>" + resultText;
         } else {
             resultContainer.textContent = "결과가 없습니다.";
         }

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>일기 작성</title>
+  <title>일기 작성 화면</title>
   <link href="./index.css" rel="stylesheet">
 </head>
 <body>  
   <div id="diaryTitle">
-    <div style="float: left;"><img src="./img/back.png" width="40" onclick="history.back()"></div>
+    <div style="float: left;"><img src="./img/back.png" width="40" onclick="history.back()" style="cursor: pointer;"></div>
     오늘 하루 감정은 어땠어요 ?
   </div>
   <div id="diaryMain">
@@ -42,7 +42,7 @@
         const result = await response.json();
         // resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
         // 결과를 analyze.html로 전달하여 표시하도록 수정
-        window.open(`analyze.html?result=${encodeURIComponent(JSON.stringify(result))}`, 'windowPop', 'width=400, height=600, left=400, top=400, resizable=yes');
+        window.open(`analyze.html?result=${encodeURIComponent(JSON.stringify(result))}`, 'windowPop', 'width=600, height=400, left=500, top=300, resizable=yes');
       } catch (error) {
         resultElement.textContent = "오류가 발생했습니다: " + error;
       }
