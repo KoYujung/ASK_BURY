@@ -6,6 +6,19 @@
     <title>감정 분석 결과</title>
 </head>
 <body>
-    <p>키키</p>
+    <div id="resultContainer"></div>
+    <script>
+        const resultContainer = document.getElementById("resultContainer");
+        const urlParams = new URLSearchParams(window.location.search);
+        const resultString = urlParams.get("result");
+
+        if (resultString) {
+            const result = JSON.parse(decodeURIComponent(resultString));
+            const resultText = JSON.stringify(result, null, 2);
+            resultContainer.textContent = "감성 분석 결과:\n" + resultText;
+        } else {
+            resultContainer.textContent = "결과가 없습니다.";
+        }
+    </script>
 </body>
 </html>

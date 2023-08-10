@@ -47,5 +47,33 @@ body {
 }
 
 #result {
-    font-size: 40px;
+    font-size: 35px;
+}
+
+#firstImg {
+    height: 720px;
+    background-image: url('./img/first_gif.gif');
+    background-size: cover;
+}
+
+a {
+    text-decoration: none;
+    color: #967E76;
+}
+
+#firstButton {
+    text-align: center;
+}
+
+#diaryButton, #capsuleButton {
+    text-align: center;
+    color: #967E76;
+    background-color: #D7C0AE;
+    font-size: 55px;
+    border: 0;
+    border-radius: 30px;
+    width: 30%;
+    height: 90px;
+    cursor: pointer;
+    margin: 2%;
 }

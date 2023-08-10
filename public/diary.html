@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>일기 작성</title>
+  <link href="./index.css" rel="stylesheet">
+</head>
+<body>
+  <div id="diaryTitle">오늘 하루 감정은 어땠어요 ?</div>
+  <div id="diaryMain">
+    <textarea id="inputDiary" rows="4" cols="50" placeholder="오늘의 일기을 작성해주세요 :)"></textarea>
+    <br>
+    <button id="analyzeButton">감정 분석</button>
+    <br>
+    <p id="result"></p>
+  </div>
+  <script>
+    const analyzeButton = document.getElementById("analyzeButton");
+    const inputDiary = document.getElementById("inputDiary");
+    const resultElement = document.getElementById("result");
+
+    analyzeButton.addEventListener("click", async () => {
+      const text = inputDiary.value.trim();
+
+      if (text === "") {
+        resultElement.textContent = "내용을 작성해주셔야 분석을 해드릴 수 있어요 !";
+        return;
+      }
+
+      const url = `http://localhost:3000/analyze?text=${encodeURIComponent(text)}`;
+
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const result = await response.json();
+        // resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
+        // 결과를 analyze.html로 전달하여 표시하도록 수정
+        window.open(`analyze.html?result=${encodeURIComponent(JSON.stringify(result))}`, 'windowPop', 'width=400, height=600, left=400, top=400, resizable=yes');
+      } catch (error) {
+        resultElement.textContent = "오류가 발생했습니다: " + error;
+      }
+    });
+  </script>
+</body>
+</html>
