@@ -48,11 +48,12 @@ body {
 
 #result {
     font-size: 35px;
+    color: #c97b7b;
 }
 
 #firstImg {
     position: relative;
-    height: 700px;
+    height: 730px;
     background-image: url('./img/first_gif.gif');
     background-size: cover;
 }
@@ -62,7 +63,7 @@ body {
     position: absolute;
     font-size: 65px;
     color: #D7C0AE;
-    margin: 15px;
+    margin: 25px;
 }
 
 a {
