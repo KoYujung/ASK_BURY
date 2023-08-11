@@ -31,7 +31,8 @@
                 fetchRandomSentence('text/negative.txt');
                 emotionText = "고단한 하루를 보내셨나 보군요.";
                 emotionImage.setAttribute('src', './img/sad.png');
-            } else if (resultText.includes("neutral")) {
+            } else {
+                fetchRandomSentence('text/neutral.txt');
                 emotionText = "오늘은 무난한 하루를 보내셨네요.";
             }
         } else {
