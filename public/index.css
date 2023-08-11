@@ -92,3 +92,9 @@ a {
     border: 0;
     background-color: transparent;
 }
+
+#analyzeBody {
+    text-align: center;
+    font-size: 35px;
+    padding: 3%;
+}
