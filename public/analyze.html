@@ -25,13 +25,14 @@
             
             if (resultText.includes("positive")) {
                 fetchRandomSentence('text/positive.txt');
-                emotionText = "오늘은 긍정적인 하루네요.";
+                emotionText = "오늘 하루를 행복하게 보낸 것 같네요.";
                 emotionImage.setAttribute('src', './img/happy.png');
-            }
-            else if (resultText.includes("negative")) {
+            } else if (resultText.includes("negative")) {
                 fetchRandomSentence('text/negative.txt');
-                emotionText = "오늘은 부정적인 하루네요.";
+                emotionText = "고단한 하루를 보내셨나 보군요.";
                 emotionImage.setAttribute('src', './img/sad.png');
+            } else if (resultText.includes("neutral")) {
+                emotionText = "오늘은 무난한 하루를 보내셨네요.";
             }
         } else {
             resultContainer.textContent = "결과가 없습니다.";
@@ -46,7 +47,7 @@
                 if (sentences.length > 0) {
                     const randomIndex = Math.floor(Math.random() * sentences.length);
                     const randomSentence = sentences[randomIndex];
-                    resultContainer.innerHTML += emotionText +"<br><br>" + randomSentence;
+                    resultContainer.innerHTML += "<br><br>" + emotionText +"<br><br>" + randomSentence;
                 } else {
                     resultContainer.textContent += " ";
                 }
