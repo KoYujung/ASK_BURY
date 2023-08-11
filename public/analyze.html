@@ -7,6 +7,8 @@
     <link href="./index.css" rel="stylesheet">
 </head>
 <body id="analyzeBody">
+    <div>AI가 분석한 당신의 감정입니다<br><br></div>
+    <img id = "emotionImage" src = "./img/default.png">
     <div id="resultContainer"></div>
     <button id="saveButton">감정 묻기</button>
     <script>
@@ -14,18 +16,22 @@
         const urlParams = new URLSearchParams(window.location.search);
         const resultString = urlParams.get("result");
         const saveButton = document.getElementById("saveButton");
+        let emotionText = "";
 
         if (resultString) {
             const result = JSON.parse(decodeURIComponent(resultString));
             const resultText = JSON.stringify(result, null, 2);
-            
-            resultContainer.innerHTML = "AI가 분석한 당신의 감정입니다<br><br>" + resultText;
+            const emotionImage = document.querySelector("#emotionImage");
             
             if (resultText.includes("positive")) {
                 fetchRandomSentence('text/positive.txt');
+                emotionText = "오늘은 긍정적인 하루네요.";
+                emotionImage.setAttribute('src', './img/happy.png');
             }
             else if (resultText.includes("negative")) {
                 fetchRandomSentence('text/negative.txt');
+                emotionText = "오늘은 부정적인 하루네요.";
+                emotionImage.setAttribute('src', './img/sad.png');
             }
         } else {
             resultContainer.textContent = "결과가 없습니다.";
@@ -40,7 +46,7 @@
                 if (sentences.length > 0) {
                     const randomIndex = Math.floor(Math.random() * sentences.length);
                     const randomSentence = sentences[randomIndex];
-                    resultContainer.innerHTML += "<br><br>" + randomSentence;
+                    resultContainer.innerHTML += "<br><br>" + emotionText +"<br><br>" + randomSentence;
                 } else {
                     resultContainer.textContent += " ";
                 }
