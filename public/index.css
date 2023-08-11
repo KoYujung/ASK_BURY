@@ -98,3 +98,16 @@ a {
     font-size: 35px;
     padding: 3%;
 }
+
+#SaveButton {
+    color: white;
+    background-color: #B7C4CF;
+    font-size: 35px;
+    border: 0;
+    border-radius: 20px;
+    width: 30%;
+    height: 50px;
+    padding: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+}

@@ -40,8 +40,6 @@
         });
 
         const result = await response.json();
-        // resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
-        // 결과를 analyze.html로 전달하여 표시하도록 수정
         window.open(`analyze.html?result=${encodeURIComponent(JSON.stringify(result))}`, 'windowPop', 'width=600, height=400, left=500, top=300, resizable=yes');
       } catch (error) {
         resultElement.textContent = "오류가 발생했습니다: " + error;
