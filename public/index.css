@@ -208,3 +208,21 @@ a {
     }
 
 }
+
+
+/* capsule */
+.capsule {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.capsule-table {
+    width: 80%;
+    height: 800px;
+}
+
+.centered-cell {
+    text-align: center;
+    vertical-align: middle;
+}
