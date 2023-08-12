@@ -54,16 +54,25 @@ body {
 #firstImg {
     position: relative;
     height: 80vh;
-    background-image: url('./img/first_gif.gif');
-    background-size: cover;
+    background-color: #EEE3CB;
+}
+
+#firstImg img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    position: absolute; 
+    top: 0;
+    left: 0;
 }
 
 #firstImgTitle {
-    bottom: 0;
+    bottom: 25px; 
+    left: 25px;
     position: absolute;
     font-size: 4em;
     color: #D7C0AE;
-    margin: 25px;
+    white-space: nowrap;
 }
 
 a {
@@ -110,4 +119,21 @@ a {
     padding: 8px;
     margin-top: 20px;
     cursor: pointer;
+}
+ 
+@media (max-width: 950px) {
+    .mainBtn {
+        font-size: 4vw;
+        width: 50%;
+        height: 70px;
+    }
+    #firstImgTitle {
+        bottom: 25px;
+        left: 25px;
+        position: absolute;
+        font-size: 4vw; 
+        color: #D7C0AE;
+        white-space: nowrap;
+    }
+    
 }
