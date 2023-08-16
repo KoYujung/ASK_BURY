@@ -10,7 +10,7 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
 const storage = multer.diskStorage({
-  destination: path.join(__dirname, 'public', 'text'), // 경로 수정
+  destination: path.join(__dirname, 'public', 'text'),
   filename: (req, file, cb) => {
       cb(null, 'diary.txt');
   }
@@ -43,18 +43,19 @@ function processUploadedFile(filePath, callback) {
       return;
     }
 
-    console.log('Read file successfully:', data); // 추가된 로그
+    console.log('Read file successfully:', data);
 
     if (!data) {
       callback(new Error('File content is empty.'));
       return;
     }
 
-    const newFilePath = path.join(__dirname, 'public', 'text', 'diary.txt'); // 경로 수정
+    const newFilePath = path.join(__dirname, 'public', 'text', 'diary.txt');
 
-    fs.writeFile(newFilePath, data, (writeErr) => {
-      if (writeErr) {
-        callback(writeErr);
+    // 데이터를 추가하는 방식으로 변경
+    fs.appendFile(newFilePath, '\n' + data, (appendErr) => {
+      if (appendErr) {
+        callback(appendErr);
       } else {
         callback(null);
       }
@@ -65,6 +66,7 @@ function processUploadedFile(filePath, callback) {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
 
 app.get('/analyze', async (req, res) => {
   const text = req.query.text;
