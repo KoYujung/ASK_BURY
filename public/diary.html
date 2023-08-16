@@ -1,3 +1,4 @@
+<!-- 클라이언트 측 코드 -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +11,7 @@
     오늘 하루 감정은 어땠어요 ?
   </div>
   <div id="diaryMain">
-    <textarea id="inputDiary" rows="4" cols="50" placeholder="오늘의 일기을 작성해주세요 :)"></textarea>
+    <textarea id="inputDiary" rows="4" cols="50" placeholder="오늘의 일기를 작성해주세요 :)"></textarea>
     <br>
       <button id="analyzeButton">감정 분석</button>
       <button id="diarySaveButton">일기 저장</button>
@@ -20,11 +21,11 @@
   <script>
     const analyzeButton = document.getElementById("analyzeButton");
     const diarySaveButton = document.getElementById("diarySaveButton");
-    const inputDiary = document.getElementById("inputDiary");
+    const inputDiary = document.getElementById("inputDiary"); // 수정: inputDiary 변수 가져오기
     const resultElement = document.getElementById("result");
 
     analyzeButton.addEventListener("click", async () => {
-      const text = inputDiary.value.trim();
+      const text = inputDiary.value.trim(); // 수정: inputDiary 변수 사용
 
       if (text === "") {
         resultElement.textContent = "내용을 작성해주셔야 분석을 해드릴 수 있어요 !";
@@ -42,8 +43,6 @@
         });
 
         const result = await response.json();
-        // resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
-        // 결과를 analyze.html로 전달하여 표시하도록 수정
         const screenWidth = window.screen.width;
         const screenHeight = window.screen.height;
         const windowWidth = 800;
@@ -57,28 +56,29 @@
       }
     });
 
-    diarySaveButton.addEventListener("click",async() => {
-      const diaryText = inputDiary.value;
+    diarySaveButton.addEventListener('click', function() {
+  var inputDiaryValue = inputDiary.value;
 
-      try {
-        const response = await fetch('/save-diary', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ diaryText: diaryText }),
-        });
+  // 텍스트를 Blob 객체로 변환
+  var blob = new Blob([inputDiaryValue], { type: 'text/plain' });
 
-        const result = await response.json();
-        if (result.success) {
-          alert("일기가 성공적으로 기록되었습니다.");
-        } else {
-          alert("일기 저장 중 오류가 발생했습니다.");
-        }
-      } catch (error) {
-        console.log("오류가 발생했습니다: " + error);
-      }
-    });
+  // Blob 객체를 FormData에 추가
+  var formData = new FormData();
+  formData.append('inputDiary', blob, 'diary.txt');
+
+  fetch('/upload', {
+    method: 'POST',
+    body: formData,
+  })
+  .then(response => response.text())
+  .then(result => {
+    console.log(result);
+  })
+  .catch(error => {
+    console.error(error);
+  });
+});
+
   </script>
 </body>
 </html>

@@ -1,34 +1,70 @@
 const express = require('express');
-const fetch = require('node-fetch');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
-const port = 3000; // 사용할 포트 번호
+const port = 3000;
 
-app.use(express.static('public')); // public 폴더의 정적 파일을 제공
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, 'public', 'text'), // 경로 수정
+  filename: (req, file, cb) => {
+      cb(null, 'diary.txt');
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('inputDiary'), (req, res) => {
+  if (!req.file) {
+    res.status(400).send('File is missing.');
+    return;
+  }
+
+  // 파일 업로드 완료 후 파일 처리를 여기서 수행
+  processUploadedFile(req.file.path, (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error processing file.');
+      return;
+    }
+
+    res.send('File saved successfully.');
+  });
+});
+
+function processUploadedFile(filePath, callback) {
+  fs.readFile(filePath, 'utf-8', (err, data) => {
+    if (err) {
+      callback(err);
+      return;
+    }
+
+    console.log('Read file successfully:', data); // 추가된 로그
+
+    if (!data) {
+      callback(new Error('File content is empty.'));
+      return;
+    }
+
+    const newFilePath = path.join(__dirname, 'public', 'text', 'diary.txt'); // 경로 수정
+
+    fs.writeFile(newFilePath, data, (writeErr) => {
+      if (writeErr) {
+        callback(writeErr);
+      } else {
+        callback(null);
+      }
+    });
+  });
+}
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
-
-app.post('/save-diary', async (req, res) => {
-  try {
-    const { diaryText } = req.body;
-
-    if (!diaryText) {
-      return res.status(400).json({ success: false, message: "일기 내용이 비어있습니다." });
-    }
-
-    const filePath = 'text/diary.txt';
-
-    await fs.appendFile(filePath, diaryText + '\n');
-
-    res.json({ success: true });
-  } catch (error) {
-    console.error("오류가 발생했습니다: ", error);
-    res.status(500).json({ success: false });
-  }
-});
-
 
 app.get('/analyze', async (req, res) => {
   const text = req.query.text;
@@ -38,8 +74,8 @@ app.get('/analyze', async (req, res) => {
     return;
   }
 
-  const client_id = "y1ck9saui7";
-  const client_secret = "Zki1wo2TCX22tbhpcyZqAqESshpaATDiuhoiYlCl";
+  const client_id = "your_client_id"; // 수정: 실제 네이버 API 클라이언트 ID
+  const client_secret = "your_client_secret"; // 수정: 실제 네이버 API 클라이언트 시크릿
   const url = "https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze";
 
   const headers = {
