@@ -10,6 +10,26 @@ app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
+app.post('/save-diary', async (req, res) => {
+  try {
+    const { diaryText } = req.body;
+
+    if (!diaryText) {
+      return res.status(400).json({ success: false, message: "일기 내용이 비어있습니다." });
+    }
+
+    const filePath = 'text/diary.txt';
+
+    await fs.appendFile(filePath, diaryText + '\n');
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("오류가 발생했습니다: ", error);
+    res.status(500).json({ success: false });
+  }
+});
+
+
 app.get('/analyze', async (req, res) => {
   const text = req.query.text;
 

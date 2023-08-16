@@ -19,6 +19,7 @@
   </div>
   <script>
     const analyzeButton = document.getElementById("analyzeButton");
+    const diarySaveButton = document.getElementById("diarySaveButton");
     const inputDiary = document.getElementById("inputDiary");
     const resultElement = document.getElementById("result");
 
@@ -53,6 +54,29 @@
         window.open(`analyze.html?result=${encodeURIComponent(JSON.stringify(result))}`, 'windowPop', `width=${windowWidth}, height=${windowHeight}, left=${left}, top=${top}, resizable=yes`);
       } catch (error) {
         resultElement.textContent = "오류가 발생했습니다: " + error;
+      }
+    });
+
+    diarySaveButton.addEventListener("click",async() => {
+      const diaryText = inputDiary.value;
+
+      try {
+        const response = await fetch('/save-diary', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ diaryText: diaryText }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          alert("일기가 성공적으로 기록되었습니다.");
+        } else {
+          alert("일기 저장 중 오류가 발생했습니다.");
+        }
+      } catch (error) {
+        console.log("오류가 발생했습니다: " + error);
       }
     });
   </script>
