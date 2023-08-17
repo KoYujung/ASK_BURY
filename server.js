@@ -69,6 +69,27 @@ app.get('/analyze', async (req, res) => {
   }
 });
 
+app.get('/capsule', async (req, res) => {
+  try {
+    const rows = await executeQuery('SELECT * FROM diaries');
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
+
+function executeQuery(query) {
+  return new Promise((resolve, reject) => {
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
