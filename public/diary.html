@@ -12,35 +12,36 @@
   <div id="diaryMain">
     <textarea id="inputDiary" rows="4" cols="50" placeholder="오늘의 일기을 작성해주세요 :)"></textarea>
     <br>
-      <button id="analyzeButton">감정 분석</button>
-      <!-- <button id="diarySaveButton">일기 저장</button> -->
+    <button id="analyzeButton">감정 분석</button>
+    <button id="diarySaveButton">일기 저장</button>
     <br>
     <p id="result"></p>
-   </div>
-   <script>
-     const analyzeButton = document.getElementById("analyzeButton");
-     const diarySaveButton = document.getElementById("diarySaveButton");
-     const inputDiary = document.getElementById("inputDiary");
-     const resultElement = document.getElementById("result");
+  </div>
+  <script>
+    const analyzeButton = document.getElementById("analyzeButton");
+    const diarySaveButton = document.getElementById("diarySaveButton");
+    const inputDiary = document.getElementById("inputDiary");
+    const resultElement = document.getElementById("result");
+
+    let sentiment = ""; // 저장할 감정 분석 결과 초기화
 
     analyzeButton.addEventListener("click", async () => {
-      const text = inputDiary.value.trim();
-      if (text === "") {
-        resultElement.textContent = "내용을 작성해주셔야 분석을 해드릴 수 있어요 !";
-        return;
-      }
-      const url = `http://localhost:3000/analyze?text=${encodeURIComponent(text)}`;
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const result = await response.json();
-        // resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
-        // 결과를 analyze.html로 전달하여 표시하도록 수정
-        const screenWidth = window.screen.width;
+   const text = inputDiary.value.trim();
+  if (text === "") {
+    resultElement.textContent = "내용을 작성해주셔야 분석을 해드릴 수 있어요 !";
+    return;
+  }
+  const url = `http://localhost:3000/analyze?text=${encodeURIComponent(text)}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const result = await response.json();
+    sentiment = result.sentiment; // 감정 분석 결과 저장
+const screenWidth = window.screen.width;
         const screenHeight = window.screen.height;
         const windowWidth = 800;
         const windowHeight = 500;
@@ -52,29 +53,32 @@
        }
     });
 
-    //  diarySaveButton.addEventListener("click", async () => {
-    //   const text = inputDiary.value.trim();
-    //   if (text === "") {
-    //     // 내용이 비어있을 경우에 대한 처리
-    //     return;
-    //   }
-    //   try {
-    //     const response = await fetch("http://localhost:3000/save", {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         content: text,
-    //         sentiment: resultElement.textContent, // 감성 분석 결과
-    //       }),
-    //     });
-    //     const result = await response.json();
-    //     console.log(result.message); // 서버로부터의 응답 출력
-    //   } catch (error) {
-    //     console.error("오류가 발생했습니다:", error);
-    //   }
-    // });
-   </script>
- </body>
- </html>
+
+diarySaveButton.addEventListener("click", async () => {
+  const text = inputDiary.value.trim();
+  if (text === "") {
+    // 내용이 비어있을 경우에 대한 처리
+    return;
+  }
+  console.log(sentiment); // 확인을 위한 로그
+  try {
+    const response = await fetch("http://localhost:3000/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        content: text,
+        sentiment: sentiment, // 저장된 감정 분석 결과 사용
+      }),
+    });
+    const result = await response.json();
+    console.log(result.message); // 서버로부터의 응답 출력
+  } catch (error) {
+    console.error("오류가 발생했습니다:", error);
+  }
+});
+
+  </script>
+</body>
+</html>
