@@ -13,7 +13,7 @@
     <textarea id="inputDiary" rows="4" cols="50" placeholder="오늘의 일기을 작성해주세요 :)"></textarea>
     <br>
       <button id="analyzeButton">감정 분석</button>
-      <button id="diarySaveButton">일기 저장</button>
+      <!-- <button id="diarySaveButton">일기 저장</button> -->
     <br>
     <p id="result"></p>
    </div>
@@ -52,29 +52,29 @@
        }
     });
 
-     diarySaveButton.addEventListener("click", async () => {
-      const text = inputDiary.value.trim();
-      if (text === "") {
-        // 내용이 비어있을 경우에 대한 처리
-        return;
-      }
-      try {
-        const response = await fetch("http://localhost:3000/save", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            content: text,
-            sentiment: resultElement.textContent, // 감성 분석 결과
-          }),
-        });
-        const result = await response.json();
-        console.log(result.message); // 서버로부터의 응답 출력
-      } catch (error) {
-        console.error("오류가 발생했습니다:", error);
-      }
-    });
+    //  diarySaveButton.addEventListener("click", async () => {
+    //   const text = inputDiary.value.trim();
+    //   if (text === "") {
+    //     // 내용이 비어있을 경우에 대한 처리
+    //     return;
+    //   }
+    //   try {
+    //     const response = await fetch("http://localhost:3000/save", {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         content: text,
+    //         sentiment: resultElement.textContent, // 감성 분석 결과
+    //       }),
+    //     });
+    //     const result = await response.json();
+    //     console.log(result.message); // 서버로부터의 응답 출력
+    //   } catch (error) {
+    //     console.error("오류가 발생했습니다:", error);
+    //   }
+    // });
    </script>
  </body>
  </html>

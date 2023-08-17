@@ -24,16 +24,16 @@ const db = new sqlite3.Database('diary.db3', (err) => {
   }
 });
 
-app.post('/save', (req, res) => {
-  const content = req.body.content;
-  const sentiment = req.body.sentiment;
-  db.run(`INSERT INTO diaries (content, sentiment) VALUES (?, ?)`, [content, sentiment], function(err) {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.status(200).json({ message: 'Diary saved successfully.', id: this.lastID });
-  });
-});
+// app.post('/save', (req, res) => {
+//   const content = req.body.content;
+//   const sentiment = req.body.sentiment;
+//   db.run(`INSERT INTO diaries (content, sentiment) VALUES (?, ?)`, [content, sentiment], function(err) {
+//     if (err) {
+//       return res.status(500).json({ error: err.message });
+//     }
+//     res.status(200).json({ message: 'Diary saved successfully.', id: this.lastID });
+//   });
+// });
 
 app.get('/analyze', async (req, res) => {
   const text = req.query.text;
