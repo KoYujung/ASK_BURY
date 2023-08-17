@@ -10,7 +10,7 @@
     <div id = "analyzeTitle">AI가 분석한 당신의 감정입니다<br><br></div>
     <img id = "emotionImage" src = "./img/default.png" width = "100">
     <div id="resultContainer"></div>
-    <button id="saveButton">감정 묻기</button>
+    <button id="saveButton">창 닫기</button>
     <script>
         const resultContainer = document.getElementById("resultContainer");
         const urlParams = new URLSearchParams(window.location.search);
@@ -58,7 +58,6 @@
         }
 
         saveButton.addEventListener("click",() => {
-            window.opener.location.href = 'capsule.html';
             self.close();
         });
 

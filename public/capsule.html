@@ -33,10 +33,6 @@
             text-align: center;
             font-size: 30px;
         }
-        .open-button {
-            margin-top: 20px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -45,20 +41,16 @@
         당신이 묻은 감정 캡슐입니다
     </div>
 
-    <div class="capsule"><table class="capsule-table" id="capsuleTable"></table>
+    <div class="capsule">
+        <table class="capsule-table" id="capsuleTable"></table>
     </div>
 
     <div class="statistics" id="statistics"></div>
 
-    <div class="open-button">
-        <button onclick="openDiaries()">일기 오픈</button>
-    </div>
-
-    <div class="statistics" id="statistics"></div>
     <div id="diariesList"></div>
 
     <script>
-         async function fetchData() {
+        async function fetchData() {
             const response = await fetch('/capsule');
             const data = await response.json();
 
@@ -90,6 +82,12 @@
                         image.addEventListener('mouseout', function() {
                             hideTooltip();
                         });
+
+                        if (data.length >= 30) {
+                            image.addEventListener('click', function() {
+                                openDiaryPopup(data[dataIndex]);
+                            });
+                        }
                     } else {
                         image.src = "./img/capsule_empty.png";
                         image.alt = "Empty";
@@ -97,25 +95,24 @@
                     cell.appendChild(image);
                 }
             }
-            // 통계 정보 표시
+
             const statistics = document.getElementById('statistics');
             statistics.textContent = `총 캡슐: ${data.length}`;
         }
 
-        async function openDiaries() {
-            const response = await fetch('/capsule');
-            const data = await response.json();
-
-            const diariesList = document.getElementById('diariesList');
-            diariesList.innerHTML = ''; // 기존 내용 초기화
-
-            data.forEach(diary => {
-                const diaryDiv = document.createElement('div');
-                diaryDiv.textContent = `일기 내용: ${diary.content}, 감정: ${diary.sentiment}`;
-                diariesList.appendChild(diaryDiv);
+        function openDiaryPopup(diary) {
+            const popupWindow = window.open("", "DiaryPopup", "width=400,height=300");
+            const contentDiv = document.createElement('div');
+            contentDiv.textContent = `일기 내용: ${diary.content}`;
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '닫기';
+            closeBtn.addEventListener('click', function() {
+                popupWindow.close();
             });
+            popupWindow.document.body.appendChild(contentDiv);
+            popupWindow.document.body.appendChild(closeBtn);
         }
-        
+
         function showTooltip(text, element) {
             const tooltip = document.createElement('div');
             tooltip.className = 'tooltip';
@@ -123,7 +120,7 @@
             if (text === 'positive') {
                 image.src = "./img/happy.png";
             } else if (text === 'negative') {
-                image.src = "./img/sad.png";  // negative인 경우 sad.png 이미지로 변경
+                image.src = "./img/sad.png";
             } else {
                 image.src = "./img/default.png";
             }
