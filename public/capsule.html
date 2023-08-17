@@ -55,5 +55,21 @@
             </tr>
         </table>
     </div>
+    <div id="resultList"></div>
+    <script>
+        async function fetchData() {
+        const response = await fetch('/capsule');
+        const data = await response.json();
+
+        const resultList = document.getElementById('resultList');
+        data.forEach(row => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `일기 내용: ${row.content}, 감정: ${row.sentiment}`;
+        resultList.appendChild(listItem);
+      });
+    }
+
+    fetchData();
+    </script>
 </body>
 </html>
