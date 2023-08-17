@@ -9,35 +9,52 @@
 <body id="analyzeBody">
     <div id = "analyzeTitle">AI가 분석한 당신의 감정입니다<br><br></div>
     <img id = "emotionImage" src = "./img/default.png" width = "100">
-    <div id="resultContainer"></div>
+    <div id="resultContainer">
+        <div id="sentimentContainer">
+            <span id="sentimentValue"></span>
+        </div>
+        <div id="confidenceContainer">
+                <span id="positiveConfidence"></span>
+                <span id="negativeConfidence"></span>
+                <span id="neutralConfidence"></span>
+        </div>
+    </div>
     <button id="saveButton">창 닫기</button>
     <script>
         const resultContainer = document.getElementById("resultContainer");
         const urlParams = new URLSearchParams(window.location.search);
         const resultString = urlParams.get("result");
         const saveButton = document.getElementById("saveButton");
-        let emotionText = "";
 
         if (resultString) {
             const result = JSON.parse(decodeURIComponent(resultString));
             const resultText = JSON.stringify(result, null, 2);
             const emotionImage = document.querySelector("#emotionImage");
-            
-            if (resultText.includes("positive")) {
-                fetchRandomSentence('text/positive.txt');
-                emotionText = "오늘 하루를 행복하게 보낸 것 같네요.";
-                emotionImage.setAttribute('src', './img/happy.png');
-            } else if (resultText.includes("negative")) {
-                fetchRandomSentence('text/negative.txt');
-                emotionText = "고단한 하루를 보내셨나 보군요.";
-                emotionImage.setAttribute('src', './img/sad.png');
-            } else {
-                fetchRandomSentence('text/neutral.txt');
-                emotionText = "오늘은 무난한 하루를 보내셨네요.";
+            const sentimentValue = document.getElementById("sentimentValue");
+            const negativeConfidence = document.getElementById("negativeConfidence");
+            const positiveConfidence = document.getElementById("positiveConfidence");
+            const neutralConfidence = document.getElementById("neutralConfidence");
+
+            if ("confidence" in result) {
+                if (result.sentiment.includes("positive")) {
+                    fetchRandomSentence('text/positive.txt');
+                    positiveResult = Math.floor(`${result.confidence.positive}` * 100) / 100;
+                    positiveConfidence.textContent = `${positiveResult}%의 확률로 오늘 하루를 행복하게 보낸 것 같네요.`;
+                    emotionImage.setAttribute('src', './img/happy.png');
+                } else if (result.sentiment.includes("negative")) {
+                    fetchRandomSentence('text/negative.txt');
+                    negativeResult = Math.floor(`${result.confidence.negative}` * 100) / 100;
+                    negativeConfidence.textContent = `${negativeResult}%의 확률로 고단한 하루를 보내셨나 보군요.`;
+                    emotionImage.setAttribute('src', './img/sad.png');
+                } else {
+                    fetchRandomSentence('text/neutral.txt');
+                    neutralResult = Math.floor(`${result.confidence.neutral}` * 100) / 100;
+                    neutralConfidence.textContent = `${neutralResult}%의 확률로 오늘은 무난한 하루를 보내셨네요.`;
+                }
+                } else {
+                resultContainer.textContent = "결과가 없습니다.";
+                }
             }
-        } else {
-            resultContainer.textContent = "결과가 없습니다.";
-        }
 
         async function fetchRandomSentence(filePath) {
             try {
@@ -48,7 +65,7 @@
                 if (sentences.length > 0) {
                     const randomIndex = Math.floor(Math.random() * sentences.length);
                     const randomSentence = sentences[randomIndex];
-                    resultContainer.innerHTML += "<br><br>" + emotionText +"<br><br>" + randomSentence;
+                    resultContainer.innerHTML += "<br><br>" + randomSentence;
                 } else {
                     resultContainer.textContent += " ";
                 }

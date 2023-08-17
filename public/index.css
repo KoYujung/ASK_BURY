@@ -31,7 +31,7 @@ body {
     width: 65%;
     height: 350px;
     padding: 2%;
-    margin: 3%;
+    margin: 2%;
     resize:none;
 }
 
@@ -239,20 +239,31 @@ a {
     background-color: rgba(0, 0, 0, 0.4);
   }
   
-  .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 40%;
+.modal-content {
+background-color: #fefefe;
+margin: 15% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 40%;
+text-align: center;
+font-size: 30px;
+}
+
+.close {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
+}
+
+#diaryNotice {
+    font-size: 25px;
+    margin: 30px;
+}
+
+#capsuleNotice {
+    font-size: 25px;
+    margin: 30px;
     text-align: center;
-    font-size: 30px;
-  }
-  
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-  }
+}

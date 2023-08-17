@@ -17,7 +17,7 @@
   </div>
   <div id="diaryMain">
     <textarea id="inputDiary" rows="4" cols="50" placeholder="오늘의 일기를 작성해주세요 :)"></textarea>
-    <br>
+    <div id="diaryNotice">일기 작성 후, 감정 분석이 완료되어야 이모지를 함께 저장할 수 있어요 !</div>
     <button id="analyzeButton">감정 분석</button>
     <button id="diarySaveButton">일기 저장</button>
     <br>
@@ -68,7 +68,7 @@
     diarySaveButton.addEventListener("click", async () => {
       const text = inputDiary.value.trim();
       if (text === "") {
-        resultElement.textContent = "내용을 작성해 주셔야 저장할 수 있어요 !";
+        resultElement.textContent = "내용을 작성해 주셔야 저장할 수 있어요";
         return;
       }
       

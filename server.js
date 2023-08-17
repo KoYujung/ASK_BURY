@@ -62,12 +62,19 @@ app.get('/analyze', async (req, res) => {
     });
     const result = await response.json();
     
-    // Respond with the sentiment analysis result
-    res.json({ sentiment: result.document.sentiment });
+    const sentiment = result.document.sentiment;
+    const confidence = {
+      negative: result.document.confidence.negative,
+      positive: result.document.confidence.positive,
+      neutral: result.document.confidence.neutral,
+    };
+    
+    res.json({ sentiment, confidence });
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }
 });
+
 
 app.get('/capsule', async (req, res) => {
   try {
