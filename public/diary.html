@@ -47,12 +47,11 @@ const screenWidth = window.screen.width;
         const windowHeight = 500;
         const left = (screenWidth - windowWidth) / 2;
         const top = (screenHeight - windowHeight) / 2;
-        window.open(`analyze.html?result=${encodeURIComponent(JSON.stringify(result))}`, 'windowPop', `width=${windowWidth}, height=${windowHeight}, left=${left}, top=${top}, resizable=yes`);
+      window.open(`analyze.html?result=${encodeURIComponent(JSON.stringify(result))}`, 'windowPop', `width=${windowWidth}, height=${windowHeight}, left=${left}, top=${top}, resizable=yes`);
       } catch (error) {
          resultElement.textContent = "오류가 발생했습니다: " + error;
        }
-    });
-
+    });  
 
 diarySaveButton.addEventListener("click", async () => {
   const text = inputDiary.value.trim();
