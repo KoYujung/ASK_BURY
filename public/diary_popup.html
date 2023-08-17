@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>감정 캡슐 팝업 화면</title>
+        <link href="./index.css" rel="stylesheet">
+        <style>
+        /* 팝업 내용의 스타일 설정 */
+        @font-face {
+    font-family: 'HakgyoansimWoojuR';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #EEE3CB;
+}
+
+* {
+    font-family: HakgyoansimWoojuR;
+}
+        .popup-content p {
+            font-size: 20px;
+        }
+        .popup-timestamp {
+            font-size: 14px;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+        .popup-close {
+            text-align: center;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #diaryDate {
+            text-align: center;
+            font-size: 45px;
+            
+            margin-top: 5%;
+        }
+        #popupContent {
+            font-size: 28px;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        .popup-timestamp {
+    font-size: 14px;
+    position: absolute;
+    bottom: 80px;
+    margin-right: 5%;
+        }
+
+        
+        .popup-close {
+    color: white;
+    background-color: #B7C4CF;
+    font-size: 30px;
+    border: 0;
+    border-radius: 20px;
+    width: 25%;
+    height: 50px;
+    padding: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+    </style>
+    </head>
+    <body>
+        <div class="popup-content">
+            <p id="diaryDate">{{formattedDate}}의 일기</p>
+            <p id="popupContent">{{content}}</p>
+            <p class="popup-timestamp">작성 시간: {{timestamp}}</p>
+            <button class="popup-close" onclick="window.close()">닫기</button>
+        </div>
+
+    </body>
+</html>

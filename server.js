@@ -68,8 +68,9 @@ app.get('/analyze', async (req, res) => {
       positive: result.document.confidence.positive,
       neutral: result.document.confidence.neutral,
     };
+    const content = result.sentences[0].content;
     
-    res.json({ sentiment, confidence });
+    res.json({ sentiment, confidence, content });
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }

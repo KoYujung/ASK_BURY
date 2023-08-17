@@ -37,42 +37,63 @@
 
             if ("confidence" in result) {
                 if (result.sentiment.includes("positive")) {
-                    fetchRandomSentence('text/positive.txt');
                     positiveResult = Math.floor(`${result.confidence.positive}` * 100) / 100;
                     positiveConfidence.textContent = `${positiveResult}%의 확률로 오늘 하루를 행복하게 보낸 것 같네요.`;
                     emotionImage.setAttribute('src', './img/happy.png');
+                    if (result.content.includes("공부") || result.content.includes("꿈") || result.content.includes("진로")) {
+                        fetchRandomSentenceInRange('text/positive.txt', 1, 15);
+                    } else if (result.content.includes("친구") || result.content.includes("관계") || result.content.includes("인간")) {
+                        fetchRandomSentenceInRange('text/positive.txt', 11, 30);
+                    } else {
+                        fetchRandomSentenceInRange('text/positive.txt', 31, 60);
+                    }
                 } else if (result.sentiment.includes("negative")) {
-                    fetchRandomSentence('text/negative.txt');
                     negativeResult = Math.floor(`${result.confidence.negative}` * 100) / 100;
                     negativeConfidence.textContent = `${negativeResult}%의 확률로 고단한 하루를 보내셨나 보군요.`;
                     emotionImage.setAttribute('src', './img/sad.png');
+                    if (result.content.includes("공부") || result.content.includes("꿈") || result.content.includes("진로")) {
+                        fetchRandomSentenceInRange('text/negative.txt', 1, 15);
+                    } else if (result.content.includes("친구") || result.content.includes("관계") || result.content.includes("인간")) {
+                        fetchRandomSentenceInRange('text/negative.txt', 11, 30);
+                    } else {
+                        fetchRandomSentenceInRange('text/negative.txt', 31, 60);
+                    }
                 } else {
-                    fetchRandomSentence('text/neutral.txt');
                     neutralResult = Math.floor(`${result.confidence.neutral}` * 100) / 100;
                     neutralConfidence.textContent = `${neutralResult}%의 확률로 오늘은 무난한 하루를 보내셨네요.`;
+                    if (result.content.includes("공부") || result.content.includes("꿈") || result.content.includes("진로")) {
+                        fetchRandomSentenceInRange('text/neutral.txt', 1, 15);
+                    } else if (result.content.includes("친구") || result.content.includes("관계") || result.content.includes("인간")) {
+                        fetchRandomSentenceInRange('text/neutral.txt', 11, 30);
+                    } else {
+                        fetchRandomSentenceInRange('text/neutral.txt', 31, 60);
+                    }
                 }
                 } else {
                 resultContainer.textContent = "결과가 없습니다.";
                 }
             }
 
-        async function fetchRandomSentence(filePath) {
-            try {
-                const response = await fetch(filePath);
-                const text = await response.text();
-                const sentences = text.split('\n').filter(sentence => sentence.trim() !== '');
-                
-                if (sentences.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * sentences.length);
-                    const randomSentence = sentences[randomIndex];
-                    resultContainer.innerHTML += "<br><br>" + randomSentence;
-                } else {
-                    resultContainer.textContent += " ";
-                }
-            } catch (error) {
-                resultContainer.textContent += "<br><br>오류가 발생했습니다: " + error;
-            }
+            async function fetchRandomSentenceInRange(filePath, startLineNumber, endLineNumber) {
+    try {
+        const response = await fetch(filePath);
+        const text = await response.text();
+        const sentences = text.split('\n').filter(sentence => sentence.trim() !== '');
+        
+        if (sentences.length > 0 && startLineNumber >= 1 && endLineNumber <= sentences.length && startLineNumber <= endLineNumber) {
+            const selectedSentences = sentences.slice(startLineNumber - 1, endLineNumber); // Adjust the line numbers to zero-based index
+            const randomIndex = Math.floor(Math.random() * selectedSentences.length);
+            const randomSentence = selectedSentences[randomIndex];
+            resultContainer.innerHTML += "<br><br>" + randomSentence;
+        } else {
+            resultContainer.textContent += " ";
         }
+    } catch (error) {
+        resultContainer.textContent += "<br><br>오류가 발생했습니다: " + error;
+    }
+}
+
+
 
         saveButton.addEventListener("click",() => {
             self.close();

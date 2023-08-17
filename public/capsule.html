@@ -9,12 +9,13 @@
         /* 테이블 스타일 */
         .capsule {
             text-align: center;
-            width:100%;
+            width: 100%;
         }
         .capsule-table {
             border-collapse: collapse;
             text-align: center;
             width: 80%;
+            height: 700px;
         }
 
         .capsule-table td {
@@ -33,6 +34,12 @@
             text-align: center;
             font-size: 30px;
         }
+
+        #capsuleNotice {
+            font-size: 25px;
+            margin: 30px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -40,9 +47,7 @@
         <div style="float: left;"><img src="./img/back.png" width="40" onclick="history.back()" style="cursor: pointer;"></div>
         당신이 묻은 감정 캡슐입니다
     </div>
-
-    <div id="capsuleNotice">총 30개의 캡슐이 담기면, 작성된 일기를 열람할 수 있어요.</div>
-
+    <div id="capsuleNotice">30개의 캡슐이 모두 담기면, 작성된 일기를 열람할 수 있어요.</div>
     <div class="capsule">
         <table class="capsule-table" id="capsuleTable"></table>
     </div>
@@ -102,18 +107,32 @@
             statistics.textContent = `총 캡슐: ${data.length}`;
         }
 
-        function openDiaryPopup(diary) {
-            const popupWindow = window.open("", "DiaryPopup", "width=400,height=300");
+         // 감정 캡슐의 일기 내용을 팝업으로 표시하는 함수
+         function openDiaryPopup(diary) {
+    const windowWidth = 800;
+    const windowHeight = 500;
+    const left = (window.screen.width - windowWidth) / 2;
+    const top = (window.screen.height - windowHeight) / 2; 
+
+    const popupWindow = window.open("", "DiaryPopup", `width=${windowWidth}, height=${windowHeight}, left=${left}, top=${top}`);
+    
+    fetch('diary_popup.html')  // Fetch the popup content template
+        .then(response => response.text())
+        .then(content => {
+            const formattedDate = new Date(diary.timestamp).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
+            const popupContent = content
+                .replace('{{content}}', diary.content)
+                .replace('{{formattedDate}}', formattedDate)  // Use formattedDate instead of timestamp
+                .replace('{{timestamp}}', diary.timestamp);
+            
             const contentDiv = document.createElement('div');
-            contentDiv.textContent = `일기 내용: ${diary.content}`;
-            const closeBtn = document.createElement('button');
-            closeBtn.textContent = '닫기';
-            closeBtn.addEventListener('click', function() {
-                popupWindow.close();
-            });
+            contentDiv.innerHTML = popupContent;
+            
             popupWindow.document.body.appendChild(contentDiv);
-            popupWindow.document.body.appendChild(closeBtn);
-        }
+        });
+
+    // Other event handling code omitted
+}
 
         function showTooltip(text, element) {
             const tooltip = document.createElement('div');
