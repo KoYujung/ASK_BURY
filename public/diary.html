@@ -10,29 +10,26 @@
     오늘 하루 감정은 어땠어요 ?
   </div>
   <div id="diaryMain">
-    <textarea id="inputDiary" rows="4" cols="50" placeholder="오늘의 일기를 작성해주세요 :)"></textarea>
+    <textarea id="inputDiary" rows="4" cols="50" placeholder="오늘의 일기을 작성해주세요 :)"></textarea>
     <br>
       <button id="analyzeButton">감정 분석</button>
       <button id="diarySaveButton">일기 저장</button>
     <br>
     <p id="result"></p>
-  </div>
-  <script>
-    const analyzeButton = document.getElementById("analyzeButton");
-    const diarySaveButton = document.getElementById("diarySaveButton");
-    const inputDiary = document.getElementById("inputDiary"); // 수정: inputDiary 변수 가져오기
-    const resultElement = document.getElementById("result");
+   </div>
+   <script>
+     const analyzeButton = document.getElementById("analyzeButton");
+     const diarySaveButton = document.getElementById("diarySaveButton");
+     const inputDiary = document.getElementById("inputDiary");
+     const resultElement = document.getElementById("result");
 
     analyzeButton.addEventListener("click", async () => {
-      const text = inputDiary.value.trim(); // 수정: inputDiary 변수 사용
-
+      const text = inputDiary.value.trim();
       if (text === "") {
         resultElement.textContent = "내용을 작성해주셔야 분석을 해드릴 수 있어요 !";
         return;
       }
-
       const url = `http://localhost:3000/analyze?text=${encodeURIComponent(text)}`;
-
       try {
         const response = await fetch(url, {
           method: "GET",
@@ -40,55 +37,44 @@
             "Content-Type": "application/json",
           },
         });
-
         const result = await response.json();
+        // resultElement.textContent = "감성분석 결과: " + JSON.stringify(result);
+        // 결과를 analyze.html로 전달하여 표시하도록 수정
         const screenWidth = window.screen.width;
         const screenHeight = window.screen.height;
         const windowWidth = 800;
         const windowHeight = 500;
         const left = (screenWidth - windowWidth) / 2;
         const top = (screenHeight - windowHeight) / 2;
-
         window.open(`analyze.html?result=${encodeURIComponent(JSON.stringify(result))}`, 'windowPop', `width=${windowWidth}, height=${windowHeight}, left=${left}, top=${top}, resizable=yes`);
       } catch (error) {
-        resultElement.textContent = "오류가 발생했습니다: " + error;
-      }
+         resultElement.textContent = "오류가 발생했습니다: " + error;
+       }
     });
 
-    diarySaveButton.addEventListener('click', function() {
-  var inputDiaryValue = inputDiary.value;
-  var newDiaryEntry = inputDiaryValue + '\n'; // 새 일기 엔트리 줄 바꿈 추가
-
-  // 기존 diary.txt 내용 불러오기
-  fetch('text/diary.txt')
-    .then(response => response.text())
-    .then(existingData => {
-      // 기존 내용 + 새로운 일기
-      var newData = existingData + newDiaryEntry;
-
-      // 전체 일기 내용을 Blob 객체로 변환
-      var blob = new Blob([newData], { type: 'text/plain' });
-      var formData = new FormData();
-      formData.append('inputDiary', blob, 'diary.txt');
-
-      // 전체 일기 내용을 읽어와서 업로드 과정 진행
-      fetch('/upload', {
-        method: 'POST',
-        body: formData,
-      })
-      .then(response => response.text())
-      .then(result => {
-        console.log(result);
-
-        // 성공적으로 저장한 후, 텍스트 입력 영역을 비워줍니다.
-        inputDiary.value = '';
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  });
-});
-
-  </script>
-</body>
-</html>
+     diarySaveButton.addEventListener("click", async () => {
+      const text = inputDiary.value.trim();
+      if (text === "") {
+        // 내용이 비어있을 경우에 대한 처리
+        return;
+      }
+      try {
+        const response = await fetch("http://localhost:3000/save", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: text,
+            sentiment: resultElement.textContent, // 감성 분석 결과
+          }),
+        });
+        const result = await response.json();
+        console.log(result.message); // 서버로부터의 응답 출력
+      } catch (error) {
+        console.error("오류가 발생했습니다:", error);
+      }
+    });
+   </script>
+ </body>
+ </html>

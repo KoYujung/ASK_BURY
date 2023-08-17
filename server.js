@@ -1,72 +1,39 @@
 const express = require('express');
-const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
+const bodyParser = require('body-parser');
+const sqlite3 = require('sqlite3').verbose();
+const fetch = require('node-fetch');
 
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }));
 
-const storage = multer.diskStorage({
-  destination: path.join(__dirname, 'public', 'text'),
-  filename: (req, file, cb) => {
-      cb(null, 'diary.txt');
+const db = new sqlite3.Database('diary.db3', (err) => {
+  if (err) {
+    console.error('Database connection error:', err.message);
+  } else {
+    console.log('Connected to the SQLite database.');
+    db.run(`CREATE TABLE IF NOT EXISTS diaries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      content TEXT,
+      sentiment TEXT,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
   }
 });
 
-const upload = multer({ storage: storage });
-
-app.post('/upload', upload.single('inputDiary'), (req, res) => {
-  if (!req.file) {
-    res.status(400).send('File is missing.');
-    return;
-  }
-
-  // 파일 업로드 완료 후 파일 처리를 여기서 수행
-  processUploadedFile(req.file.path, (err) => {
+app.post('/save', (req, res) => {
+  const content = req.body.content;
+  const sentiment = req.body.sentiment;
+  db.run(`INSERT INTO diaries (content, sentiment) VALUES (?, ?)`, [content, sentiment], function(err) {
     if (err) {
-      console.error(err);
-      res.status(500).send('Error processing file.');
-      return;
+      return res.status(500).json({ error: err.message });
     }
-
-    res.send('File saved successfully.');
+    res.status(200).json({ message: 'Diary saved successfully.', id: this.lastID });
   });
 });
-
-function processUploadedFile(filePath, callback) {
-  fs.readFile(filePath, 'utf-8', (err, data) => {
-    if (err) {
-      callback(err);
-      return;
-    }
-
-    console.log('Read file successfully:', data);
-
-    if (!data) {
-      callback(new Error('File content is empty.'));
-      return;
-    }
-
-    const newFilePath = path.join(__dirname, 'public', 'text', 'diary.txt');
-
-    // 데이터를 추가하는 방식으로 변경
-    fs.appendFile(newFilePath, '\n' + data, (appendErr) => {
-      if (appendErr) {
-        callback(appendErr);
-      } else {
-        callback(null);
-      }
-    });
-  });
-}
-
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
-
 
 app.get('/analyze', async (req, res) => {
   const text = req.query.text;
@@ -75,31 +42,32 @@ app.get('/analyze', async (req, res) => {
     res.status(400).json({ error: "Text is missing or empty." });
     return;
   }
-
-  const client_id = "your_client_id"; // 수정: 실제 네이버 API 클라이언트 ID
-  const client_secret = "your_client_secret"; // 수정: 실제 네이버 API 클라이언트 시크릿
+  const client_id = "y1ck9saui7";
+  const client_secret = "Zki1wo2TCX22tbhpcyZqAqESshpaATDiuhoiYlCl";
   const url = "https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze";
-
   const headers = {
     "X-NCP-APIGW-API-KEY-ID": client_id,
     "X-NCP-APIGW-API-KEY": client_secret,
     "Content-Type": "application/json",
   };
-
   const data = {
     content: text.slice(0, Math.min(text.length, 900)),
   };
-
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(data),
     });
-
     const result = await response.json();
-    res.json(result.document.sentiment);
+    
+    // Respond with the sentiment analysis result
+    res.json({ sentiment: result.document.sentiment });
   } catch (error) {
     res.status(500).json({ error: "An error occurred" });
   }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
