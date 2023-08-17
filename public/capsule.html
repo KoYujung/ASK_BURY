@@ -5,71 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>감정 캡슐 화면</title>
     <link href="./index.css" rel="stylesheet">
+    <style>
+        /* 테이블 스타일 */
+        .capsule {
+            text-align: center;
+            width:100%;
+        }
+        .capsule-table {
+            border-collapse: collapse;
+            text-align: center;
+            width: 80%;
+        }
+
+        .capsule-table td {
+            padding: 10px;
+            border-collapse: collapse;
+        }
+
+        /* 이미지 스타일 */
+        .image {
+            width: 100px;
+        }
+
+        /* 통계 정보 스타일 */
+        .statistics {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 30px;
+        }
+        .open-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div id="diaryTitle">
         <div style="float: left;"><img src="./img/back.png" width="40" onclick="history.back()" style="cursor: pointer;"></div>
         당신이 묻은 감정 캡슐입니다
     </div>
-    <div class="capsule">
-        <table class="capsule-table">
-            <tr>
-                <td class="centered-cell"><img src="./img/capsule_full.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-            </tr>
-            <tr>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-            </tr>
-            <tr>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-            </tr>
-            <tr>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-            </tr>
-            <tr>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-                <td class="centered-cell"><img src="./img/capsule_empty.png" width="100"></td>
-            </tr>
-        </table>
+
+    <div class="capsule"><table class="capsule-table" id="capsuleTable"></table>
     </div>
-    <div id="resultList"></div>
+
+    <div class="statistics" id="statistics"></div>
+
+    <div class="open-button">
+        <button onclick="openDiaries()">일기 오픈</button>
+    </div>
+
+    <div class="statistics" id="statistics"></div>
+    <div id="diariesList"></div>
+
     <script>
-        async function fetchData() {
-        const response = await fetch('/capsule');
-        const data = await response.json();
+         async function fetchData() {
+            const response = await fetch('/capsule');
+            const data = await response.json();
 
-        const resultList = document.getElementById('resultList');
-        data.forEach(row => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `일기 내용: ${row.content}, 감정: ${row.sentiment}`;
-        resultList.appendChild(listItem);
-      });
-    }
+            const table = document.getElementById('capsuleTable');
+            let rowCounter = 0;
 
-    fetchData();
+            for (let row = 0; row < 5; row++) {
+                const newRow = table.insertRow(row);
+                
+                for (let col = 0; col < 6; col++) {
+                    const cell = newRow.insertCell(col);
+                    const dataIndex = row * 6 + col;
+
+                    const image = document.createElement('img');
+                    image.classList.add('image');
+                    if (dataIndex < data.length) {
+                        const sentiment = data[dataIndex].sentiment;
+                        if (sentiment === 'positive') {
+                            image.src = "./img/capsule_full.png";
+                        } else {
+                            image.src = "./img/capsule_full.png";
+                        }
+                        image.alt = `Sentiment: ${sentiment}`;
+
+                        image.addEventListener('mouseover', function() {
+                            showTooltip(sentiment, image);
+                        });
+
+                        image.addEventListener('mouseout', function() {
+                            hideTooltip();
+                        });
+                    } else {
+                        image.src = "./img/capsule_empty.png";
+                        image.alt = "Empty";
+                    }
+                    cell.appendChild(image);
+                }
+            }
+            // 통계 정보 표시
+            const statistics = document.getElementById('statistics');
+            statistics.textContent = `총 캡슐: ${data.length}`;
+        }
+
+        async function openDiaries() {
+            const response = await fetch('/capsule');
+            const data = await response.json();
+
+            const diariesList = document.getElementById('diariesList');
+            diariesList.innerHTML = ''; // 기존 내용 초기화
+
+            data.forEach(diary => {
+                const diaryDiv = document.createElement('div');
+                diaryDiv.textContent = `일기 내용: ${diary.content}, 감정: ${diary.sentiment}`;
+                diariesList.appendChild(diaryDiv);
+            });
+        }
+        
+        function showTooltip(text, element) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            const image = document.createElement('img');
+            if (text === 'positive') {
+                image.src = "./img/happy.png";
+            } else if (text === 'negative') {
+                image.src = "./img/sad.png";  // negative인 경우 sad.png 이미지로 변경
+            } else {
+                image.src = "./img/default.png";
+            }
+            image.alt = text;
+            tooltip.appendChild(image);
+            tooltip.style.position = 'absolute';
+            tooltip.style.left = `${element.getBoundingClientRect().right}px`;
+            tooltip.style.top = `${element.getBoundingClientRect().top - 20}px`;
+            document.body.appendChild(tooltip);
+        }
+
+        function hideTooltip() {
+            const tooltip = document.querySelector('.tooltip');
+            if (tooltip) {
+                document.body.removeChild(tooltip);
+            }
+        }
+
+        fetchData();
     </script>
 </body>
 </html>
